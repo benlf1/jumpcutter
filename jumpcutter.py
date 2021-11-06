@@ -11,6 +11,7 @@ from shutil import copyfile, rmtree
 import os
 import argparse
 from pytube import YouTube
+import cv2
 
 def downloadFile(url):
     name = YouTube(url).streams.first().download()
@@ -61,7 +62,7 @@ parser.add_argument('--sounded_speed', type=float, default=1.00, help="the speed
 parser.add_argument('--silent_speed', type=float, default=5.00, help="the speed that silent frames should be played at. 999999 for jumpcutting.")
 parser.add_argument('--frame_margin', type=float, default=1, help="some silent frames adjacent to sounded frames are included to provide context. How many frames on either the side of speech should be included? That's this variable.")
 parser.add_argument('--sample_rate', type=float, default=44100, help="sample rate of the input and output videos")
-parser.add_argument('--frame_rate', type=float, default=30, help="frame rate of the input and output videos. optional... I try to find it out myself, but it doesn't always work.")
+parser.add_argument('--frame_rate', type=float, default=0, help="frame rate of the input and output videos. optional... I try to find it out myself, but it doesn't always work.")
 parser.add_argument('--frame_quality', type=int, default=3, help="quality of frames to be extracted from input video. 1 is highest, 31 is lowest, 3 is the default.")
 
 args = parser.parse_args()
@@ -81,6 +82,11 @@ URL = args.url
 FRAME_QUALITY = args.frame_quality
 
 assert INPUT_FILE != None , "why u put no input file, that dum"
+
+if frameRate <= 0:
+    cam = cv2.VideoCapture(INPUT_FILE)
+    frameRate = cam.get(cv2.CAP_PROP_FPS)
+    print("Found framerate: {0}".format(frameRate))
     
 if len(args.output_file) >= 1:
     OUTPUT_FILE = args.output_file
