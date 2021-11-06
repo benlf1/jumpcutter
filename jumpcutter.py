@@ -56,6 +56,9 @@ def deletePath(s): # Dangerous! Watch out!
 def processVideo(inputPath, frameRate):
 
     OUTPUT_FILE = inputToOutputFilename(inputPath)
+
+    inputPath = "\"{0}\"".format(inputPath)
+    OUTPUT_FILE = "\"{0}\"".format(OUTPUT_FILE)
         
     createPath(TEMP_FOLDER)
 
